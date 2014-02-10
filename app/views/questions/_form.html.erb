@@ -1,0 +1,37 @@
+<%= form_for(@question) do |f| %>
+  <% if @question.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@question.errors.count, "error") %> prohibited this question from being saved:</h2>
+
+      <ul>
+      <% @question.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="field">
+    <%= f.label :category %><br />
+    <%= f.select :category_id, Category.all.collect{|a| [a.question_category, a.id]} %>
+  </div>
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :category_type %><br />
+    <%= f.select :category_type, Answer::OPTIONS.collect{|k, v| [v, k]}, :html => {:id => "option"}%>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+<script>
+  $(document).ready(function(){
+    $("#question_category_type").on('change', function(){
+      var option_value = $(this).val();
+      alert(option_value)
+      $.ajax({url: "/questions/choices", data: 'option='+option_value});
+    })
+  })
+</script>
